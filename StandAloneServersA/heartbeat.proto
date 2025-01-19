@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+// 服务接口 HeartbeatService，包含两个远程过程调用 (RPC) 方法
+service HeartbeatService {
+    // 发送心跳请求，接收一个 HeartbeatRequest 消息并返回 HeartbeatResponse 消息
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+
+    // 查询最近的客户端信息，接收一个 ClientLocationRequest 消息并返回 ClientLocationResponse 消息
+    rpc GetNearestClients(ClientLocationRequest) returns (ClientLocationResponse);
+}
+
+// 心跳请求消息
+message HeartbeatRequest {
+    // 客户端的唯一标识符
+    string client_id = 1;
+
+    // 客户端的纬度，表示地理位置
+    double latitude = 2;
+
+    // 客户端的经度，表示地理位置
+    double longitude = 3;
+
+    // 一个随机数，用于模拟动态数据
+    int32 random_number = 4;
+}
+
+// 心跳响应消息
+message HeartbeatResponse {
+    // 表示心跳请求的状态（如 "success" 或 "failed" 等）
+    string status = 1;
+}
+
+// 查询客户端位置请求消息
+message ClientLocationRequest {
+    // 客户端的唯一标识符，用于查询该客户端的位置
+    string client_id = 1;
+}
+
+// 查询客户端位置响应消息
+message ClientLocationResponse {
+    // 客户端列表，返回的是最近的客户端信息
+    repeated NearestClient clients = 1;
+}
+
+// 最近客户端信息的消息
+message NearestClient {
+    // 最近客户端的唯一标识符
+    string client_id = 1;
+
+    // 最近客户端的随机数
+    int32 random_number = 2;
+
+    // 客户端与当前查询客户端的距离（单位：km）
+    double distance = 3;
+}
